@@ -2,14 +2,17 @@
 using Shiny.Locations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Tripper.ViewModels
 {
-    public class HomeViewModel
+    public class HomeViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private readonly IGpsManager manager;
         private IDisposable? subscription;
         private GpsReading lastReading;
