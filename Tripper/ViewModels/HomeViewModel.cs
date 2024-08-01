@@ -1,4 +1,5 @@
-﻿using Shiny.Locations;
+﻿using Microsoft.Maui;
+using Shiny.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,77 +10,50 @@ namespace Tripper.ViewModels
 {
     public class HomeViewModel
     {
-        readonly IGpsManager manager;
+        private readonly IGpsManager manager;
+        private IDisposable? subscription;
+        private GpsReading lastReading;
+        private DateTime lastReadingDate;
 
+        public string lastReadingDateString
+        {
+            get => lastReadingDate.ToString();
+        }
 
-        public HomeViewModel(BaseServices services, IGpsManager manager) : base(services)
+        public string lastReadingString 
+        { 
+            get => lastReading.ToString();
+        }
+
+        public HomeViewModel(IGpsManager manager)
         {
             this.manager = manager;
+            SubscribeToLocationChanges();
+        }
 
-            var l = this.manager.CurrentListener;
-            this.IsUpdating = l != null;
+        public void Dispose() {
+            manager?.StopListener();
+            subscription?.Dispose();
+        }
 
-            var mode = l?.BackgroundMode ?? GpsBackgroundMode.None;
-            this.UseBackground = mode != GpsBackgroundMode.None;
-            this.UseRealtime = mode == GpsBackgroundMode.Realtime;
-            this.SelectedAccuracy = (l?.Accuracy ?? GpsAccuracy.Normal).ToString();
 
-            this.GetCurrentPosition = this.CreateOneReading(LocationRetrieve.Current);
-            this.GetLastReading = this.CreateOneReading(LocationRetrieve.Last);
-            this.GetLastOrCurrent = this.CreateOneReading(LocationRetrieve.LastOrCurrent);
-            this.Accuracies = new[]
-                {
-                GpsAccuracy.Highest.ToString(),
-                GpsAccuracy.High.ToString(),
-                GpsAccuracy.Normal.ToString(),
-                GpsAccuracy.Low.ToString(),
-                GpsAccuracy.Lowest.ToString()
-            };
-
-            this.ToggleUpdates = new Command(
-                async () =>
-                {
-                    if (this.manager.CurrentListener != null)
-                    {
-                        await this.manager.StopListener();
-                    }
-                    else
-                    {
-                        var access = await this.manager.RequestAccess(new GpsRequest
-                        {
-                            BackgroundMode = this.GetMode()
-                        });
-                        this.Access = access.ToString();
-
-                        if (access != AccessState.Available)
-                        {
-                            await this.Dialogs.DisplayAlertAsync("ERROR", "Insufficient permissions - " + access, "OK");
-                            return;
-                        }
-
-                        var accuracy = (GpsAccuracy)Enum.Parse(typeof(GpsAccuracy), this.SelectedAccuracy);
-                        var request = new GpsRequest
-                        {
-                            BackgroundMode = this.GetMode(),
-                            Accuracy = accuracy
-                        };
-                        try
-                        {
-                            await this.manager.StartListener(request);
-                        }
-                        catch (Exception ex)
-                        {
-                            await this.Dialogs.DisplayAlertAsync("ERROR", ex.ToString(), "OK");
-                        }
-                    }
-                    this.IsUpdating = this.manager.CurrentListener != null;
-                }
-            );
-
-            this.RequestAccess = new Command(async () =>
-            {
-                var request = new GpsRequest { BackgroundMode = this.GetMode() };
-                this.Access = (await this.manager.RequestAccess(request)).ToString();
+        public void SubscribeToLocationChanges() 
+        {
+            this.subscription = this.manager.WhenReading().Subscribe(reading => {
+                //TODO log reading
+                lastReading = reading;
+                lastReadingDate = DateTime.Now;
             });
         }
+
+        public async Task StartListener()
+        {
+            await manager.StartListener(new GpsRequest
+            {
+                Accuracy = GpsAccuracy.High,
+                BackgroundMode = GpsBackgroundMode.Realtime,
+                DistanceFilterMeters = 5
+            });
+        }
+    }
 }
