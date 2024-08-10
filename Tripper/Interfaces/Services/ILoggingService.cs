@@ -1,4 +1,6 @@
-﻿namespace Tripper.Interfaces.Services;
+﻿using System.Runtime.CompilerServices;
+
+namespace Tripper.Interfaces.Services;
 
 public interface ILoggingService
 {

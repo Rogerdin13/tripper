@@ -35,14 +35,14 @@ public class HomeViewModel : ViewModelBase
         refreshInProgress = true;
 
         var gpsEnabled = DeviceService.GpsServicesEnabled();
-        LoggingService.Log($"(HomeViewModel) (RefreshingCommand): gps-listener running:{ListenerIsRunning}, gps-enabled:{gpsEnabled}");
+        LoggingService.Log($"gps-listener running:{ListenerIsRunning}, gps-enabled:{gpsEnabled}");
 
         ListenerIsRunning = GpsManager.CurrentListener != null && gpsEnabled;
 
         SubscribeToLocationChanges();
         if (gpsEnabled && !ListenerIsRunning) 
         {
-            LoggingService.Log($"(HomeViewModel) (RefreshingCommand): gps enabled & no listner running -> trying to start listener");
+            LoggingService.Log($"gps enabled & no listner running -> trying to start listener");
 
             ListenerIsRunning = await StartListener();
 
@@ -62,7 +62,7 @@ public class HomeViewModel : ViewModelBase
     private DateTimeOffset? lastReadingDate;
     public DateTimeOffset? LastReadingDate
     {
-        get => lastReadingDate;
+        get => lastReadingDate.GetValueOrDefault().ToLocalTime();
         set => SetProperty(ref lastReadingDate, value);
     }
 
@@ -80,6 +80,14 @@ public class HomeViewModel : ViewModelBase
         set => SetProperty(ref listenerIsRunning, value);
     }
 
+    private double totalDistance = .0;
+    public double TotalDistance
+    {
+        get => totalDistance;
+        set => SetProperty(ref totalDistance, value);
+    }
+
+
     #endregion
 
     public HomeViewModel(IGpsManager manager, IDeviceService deviceService, ILoggingService loggingService, INavigationService navigationService) 
@@ -89,7 +97,7 @@ public class HomeViewModel : ViewModelBase
         DeviceService = deviceService;
 
         var gpsEnabled = DeviceService.GpsServicesEnabled();
-        LoggingService.Log($"(HomeViewModel) (CTOR): current listener is running: {GpsManager.CurrentListener != null}, gps-enabled:{gpsEnabled}");
+        LoggingService.Log($"current listener is running: {GpsManager.CurrentListener != null}, gps-enabled:{gpsEnabled}");
         ListenerIsRunning = GpsManager.CurrentListener != null && gpsEnabled;
 
         SubscribeToLocationChanges();
@@ -107,11 +115,12 @@ public class HomeViewModel : ViewModelBase
 
     public void SubscribeToLocationChanges() 
     {
-        LoggingService.Log($"(HomeViewModel) (SubscribeToLocationChanges): loc-subscription listening:{subscription != null}");
+        LoggingService.Log($"loc-subscription listening:{subscription != null}");
         if (subscription != null) return;
         subscription = GpsManager.WhenReading().Subscribe(reading => {
             LastReading = reading;
             LastReadingDate = reading.Timestamp;
+            //TODO implement push stack and totalDistance computation
         });
     }
 
@@ -130,7 +139,7 @@ public class HomeViewModel : ViewModelBase
         }
         catch (Exception ex) 
         {
-            LoggingService.Log($"(HomeViewModel) (StartListener): ERROR {ex.Message}");
+            LoggingService.Log($"ERROR {ex.Message}");
             var t = ex.Message == "There is already a GPS listener running";
             return ex.Message == "There is already a GPS listener running" ;
         }

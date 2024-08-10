@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              xmlns:vm="clr-namespace:Tripper.ViewModels" 
              xmlns:views="clr-namespace:Tripper.Views"
              x:Class="Tripper.Views.Home"
@@ -24,7 +25,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Label Grid.ColumnSpan="2" 
                            Text="Tripper not running -> please check if GPS in enabled &amp; try to refresh the page."
@@ -32,16 +33,39 @@
                            VerticalTextAlignment="Center"
                            HorizontalTextAlignment="Center"
                            IsVisible="{Binding ListenerIsRunning, Converter={StaticResource BoolInverter}}"/>
-                    <Label Grid.Column ="0"
-                            Text="{Binding LastReading}"
-                            VerticalOptions="Center" 
-                            HorizontalOptions="Center"
-                            IsVisible="{Binding ListenerIsRunning}"/>
+                    <Label Grid.ColumnSpan="2"
+                           Padding="5"
+                           VerticalTextAlignment="Center"
+                           HorizontalTextAlignment="Start"
+                           IsVisible="{Binding ListenerIsRunning}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Distnace: "/>
+                                <Span Text="{Binding TotalDistance}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="Position: "/>
+                                <Span Text="{Binding LastReading.Position.Latitude}"/>
+                                <Span Text=" | "/>
+                                <Span Text="{Binding LastReading.Position.Longitude}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="Heading: "/>
+                                <Span Text="{Binding LastReading.Heading}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="Altitude: "/>
+                                <Span Text="{Binding LastReading.Altitude}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="Speed: "/>
+                                <Span Text="{Binding LastReading.Speed}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
                     <Label Grid.Column ="1"
-                            Text="{Binding LastReadingDate}"
-                            VerticalOptions="Center" 
-                            HorizontalOptions="Center"
-                            IsVisible="{Binding ListenerIsRunning}"/>
+                           Text="{Binding LastReadingDate, Converter={StaticResource OffsetToTimeConverter}}"
+                           VerticalOptions="End" 
+                           HorizontalOptions="End"
+                           IsVisible="{Binding ListenerIsRunning}"/>
                 </Grid>
             </ScrollView>
             

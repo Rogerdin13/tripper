@@ -15,6 +15,7 @@
             
             <!-- CONVERTERS -->
             <converters:BoolInverter x:Key="BoolInverter"/>
+            <converters:OffsetToTimeConverter x:Key="OffsetToTimeConverter"/>
             
         </ResourceDictionary>
     </Application.Resources>

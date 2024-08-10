@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using Tripper.Interfaces.Services;
 
 namespace Tripper.Services;
@@ -28,11 +30,16 @@ public class LoggingService : ILoggingService
     /// <exception cref="NotImplementedException"></exception>
     public void Log(string message)
     {
+        StackFrame frame = new StackFrame(1, true);
+        var method = frame.GetMethod();
+        var callerFileName = frame.GetFileName()?.Split('\\').Last().Split('.')[0];
+        var lineNumber = frame.GetFileLineNumber();
+
         try
         {
             using (var streamWriter = new StreamWriter(logFileNameAndPath, true))
             {
-                streamWriter.WriteLine($"[{DateTime.UtcNow.ToLocalTime():HH:mm:ss}]: {message}");
+                streamWriter.WriteLine($"[{DateTime.UtcNow.ToLocalTime():HH:mm:ss}] [{callerFileName}.{method}/{lineNumber}]: {message}");
             }
         }
         catch 
@@ -75,13 +82,13 @@ public class LoggingService : ILoggingService
             var fs = File.Create(logFileNameAndPath);
             fs.Dispose();
 
-            Log($"---   Log Created: {todayDateString}");
+            Log($"---- Log Created: {todayDateString}");
 
             logNeedsCleanup = false;
             return;
         }
 
-        Log($"---   Reinitialized: {todayDateString}");
+        Log($"---- Reinitialized: {todayDateString}");
     }
 
     public bool LogNeedsCleanup(string today)
