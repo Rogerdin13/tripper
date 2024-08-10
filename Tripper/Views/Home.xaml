@@ -2,19 +2,26 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Tripper.ViewModels" 
+             xmlns:views="clr-namespace:Tripper.Views"
              x:Class="Tripper.Views.Home"
              Title="Home">
-    <ContentPage.BindingContext>
-        <vm:HomeViewModel/>
-    </ContentPage.BindingContext>
-    <VerticalStackLayout>
-        <Label 
-            Text="{Binding lastReadingString}"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Label 
-            Text="{Binding lastReadingDateString}"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <NavigationPage.TitleView>
+        <views:CustomTitle/>
+    </NavigationPage.TitleView>
+
+    <Grid RowDefinitions="auto,*,auto">
+        <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <VerticalStackLayout>
+                <Label Text="{Binding LastReading}"
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" />
+                <Label Text="{Binding LastReadingDate}"
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </RefreshView>
+    </Grid>
+    
 </ContentPage>

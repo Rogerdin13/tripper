@@ -1,62 +1,85 @@
-﻿using Microsoft.Maui;
+﻿using Prism.Common;
 using Shiny.Locations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Tripper.Helpers;
+using Tripper.Interfaces.Services;
+using Tripper.Services;
 
-namespace Tripper.ViewModels
+namespace Tripper.ViewModels;
+
+
+public class HomeViewModel : ViewModelBase
 {
-    public class HomeViewModel : INotifyPropertyChanged
+    private readonly IGpsManager manager;
+    private IDisposable? subscription;
+
+    #region refresh binding props
+
+    private bool isRefreshing;
+    public bool IsRefreshing
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        get => isRefreshing;
+        set => SetProperty(ref isRefreshing, value);
+    }
 
-        private readonly IGpsManager manager;
-        private IDisposable? subscription;
-        private GpsReading lastReading;
-        private DateTime lastReadingDate;
+    public ICommand RefreshingCommand => new Command(() =>
+    {
+        if(IsRefreshing) return;
 
-        public string lastReadingDateString
+        IsRefreshing = true;
+        //TODO not sure what can be ideal here but maybe rechecking the prerequisits -> permissions given? features on?!
+        LoggingService?.Log("HomeView:RefreshingCommand refreshing view");
+        IsRefreshing = false;
+    });
+
+    #endregion
+
+    #region binding props
+
+    private DateTime? lastReadingDate;
+    public DateTime? LastReadingDate
+    {
+        get => lastReadingDate;
+        set => SetProperty(ref lastReadingDate, value);
+    }
+
+    private GpsReading? lastReading;
+    public GpsReading? LastReading
+    { 
+        get => lastReading;
+        set => SetProperty(ref lastReading, value);
+    }
+
+    #endregion
+
+    public HomeViewModel(IGpsManager manager, ILoggingService loggingService, INavigationService navigationService, IPageAccessor pageAccessor) 
+        : base(loggingService, navigationService, pageAccessor) 
+    { 
+        this.manager = manager;
+        SubscribeToLocationChanges();
+    }
+
+    public void Dispose() {
+        manager?.StopListener();
+        subscription?.Dispose();
+    }
+
+
+    public void SubscribeToLocationChanges() 
+    {
+        this.subscription = this.manager.WhenReading().Subscribe(reading => {
+            //TODO log reading
+            LastReading = reading;
+            LastReadingDate = DateTime.Now;
+        });
+    }
+
+    public async Task StartListener()
+    {
+        await manager.StartListener(new GpsRequest
         {
-            get => lastReadingDate.ToString();
-        }
-
-        public string lastReadingString 
-        { 
-            get => lastReading.ToString();
-        }
-
-        public HomeViewModel(IGpsManager manager)
-        {
-            this.manager = manager;
-            SubscribeToLocationChanges();
-        }
-
-        public void Dispose() {
-            manager?.StopListener();
-            subscription?.Dispose();
-        }
-
-
-        public void SubscribeToLocationChanges() 
-        {
-            this.subscription = this.manager.WhenReading().Subscribe(reading => {
-                //TODO log reading
-                lastReading = reading;
-                lastReadingDate = DateTime.Now;
-            });
-        }
-
-        public async Task StartListener()
-        {
-            await manager.StartListener(new GpsRequest
-            {
-                Accuracy = GpsAccuracy.High,
-                BackgroundMode = GpsBackgroundMode.Realtime,
-                DistanceFilterMeters = 5
-            });
-        }
+            Accuracy = GpsAccuracy.High,
+            BackgroundMode = GpsBackgroundMode.Realtime,
+            DistanceFilterMeters = 5
+        });
     }
 }
