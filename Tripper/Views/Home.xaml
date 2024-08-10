@@ -10,18 +10,8 @@
         <views:CustomTitle/>
     </NavigationPage.TitleView>
 
-    <Grid RowDefinitions="auto,*,auto">
-        <RefreshView IsRefreshing="{Binding IsRefreshing}"
-                     Command="{Binding RefreshCommand}">
-            <VerticalStackLayout>
-                <Label Text="{Binding LastReading}"
-                       VerticalOptions="Center" 
-                       HorizontalOptions="Center" />
-                <Label Text="{Binding LastReadingDate}"
-                       VerticalOptions="Center" 
-                       HorizontalOptions="Center" />
-            </VerticalStackLayout>
-        </RefreshView>
-    </Grid>
-    
+    <VerticalStackLayout>
+        <Label Text="Test" TextColor="#fff"/>
+    </VerticalStackLayout>
+
 </ContentPage>

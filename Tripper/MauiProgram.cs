@@ -1,4 +1,5 @@
-﻿using Tripper.Interfaces.Services;
+﻿using Prism;
+using Tripper.Interfaces.Services;
 using Tripper.Services;
 using Tripper.ViewModels;
 using Tripper.Views;
@@ -15,7 +16,21 @@ namespace Tripper
                 .UseMauiApp<App>()
                 .UsePrism(
                     new DryIocContainerExtension(),
-                    prism => prism.CreateWindow("NavigationPage/Home")
+                    prism => prism.OnInitialized(container =>
+                    {
+                        var eventAggregator = container.Resolve<IEventAggregator>();
+                        eventAggregator.GetEvent<NavigationRequestEvent>().Subscribe(context => {
+                            var type = context.Type;
+                            var wasSuccess = context.Result.Success;
+
+                            if(type == NavigationRequestType.GoBack && wasSuccess)
+                            {
+                                var ctvm = Application.Current!.Handler.MauiContext!.Services.GetServices<CustomTitleViewModel>().First();
+                                ctvm.isLogPage = false;
+                            }
+                        });
+                    })
+                    .CreateWindow("NavigationPage/Home")
                 )
                 .UseShiny()
                 .ConfigureFonts(fonts =>
@@ -31,6 +46,7 @@ namespace Tripper
             builder.Services.AddBattery();
             builder.Services.AddGps<Tripper.Delegates.MyGpsDelegate>();
             builder.Services.AddGeofencing<Tripper.Delegates.MyGeofenceDelegate>();
+
 
             var app = builder.Build();
 
@@ -49,13 +65,12 @@ namespace Tripper
             builder.Services.AddSingleton<ILoggingService, LoggingService>();
 
             // MVVM Pages
-            builder.Services.RegisterForNavigation<NavigationPage>();
             builder.Services.RegisterForNavigation<Home, HomeViewModel>();
             builder.Services.RegisterForNavigation<LogPage, LogPageViewModel>();
             builder.Services.RegisterForNavigation<InitializationPage, InitializationPageViewModel>();
 
             // View VMs
-            builder.Services.AddTransient<CustomTitleViewModel>();
+            builder.Services.AddSingleton<CustomTitleViewModel>();
 
             return builder;
         }
