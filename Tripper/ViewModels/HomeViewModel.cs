@@ -1,8 +1,7 @@
-﻿using Prism.Common;
-using Shiny.Locations;
+﻿using Shiny.Locations;
+using System.Runtime.CompilerServices;
 using Tripper.Helpers;
 using Tripper.Interfaces.Services;
-using Tripper.Services;
 
 namespace Tripper.ViewModels;
 
@@ -11,7 +10,8 @@ public class HomeViewModel : ViewModelBase
 {
     private readonly IGpsManager GpsManager;
     private readonly IDeviceService DeviceService;
-    private IDisposable? subscription;
+    private IDisposable? subscription = null;
+    private bool refreshInProgress;
 
     #region refresh binding props
 
@@ -29,22 +29,38 @@ public class HomeViewModel : ViewModelBase
         set => SetProperty(ref platformRefreshColor, value);
     }
 
-    public ICommand RefreshingCommand => new Command(() =>
+    public ICommand RefreshingCommand => new Command(async () =>
     {
-        if(IsRefreshing) return;
+        if (refreshInProgress) return;
+        refreshInProgress = true;
 
-        IsRefreshing = true;
-        //TODO not sure what can be ideal here but maybe rechecking the prerequisits -> permissions given? features on?!
-        LoggingService?.Log("HomeView:RefreshingCommand refreshing view");
+        var gpsEnabled = DeviceService.GpsServicesEnabled();
+        LoggingService.Log($"(HomeViewModel) (RefreshingCommand): gps-listener running:{ListenerIsRunning}, gps-enabled:{gpsEnabled}");
+
+        ListenerIsRunning = GpsManager.CurrentListener != null && gpsEnabled;
+
+        SubscribeToLocationChanges();
+        if (gpsEnabled && !ListenerIsRunning) 
+        {
+            LoggingService.Log($"(HomeViewModel) (RefreshingCommand): gps enabled & no listner running -> trying to start listener");
+
+            ListenerIsRunning = await StartListener();
+
+            IsRefreshing = false;
+            refreshInProgress = false;
+            return;
+        }
+
         IsRefreshing = false;
+        refreshInProgress = false;
     });
 
     #endregion
 
     #region binding props
 
-    private DateTime? lastReadingDate;
-    public DateTime? LastReadingDate
+    private DateTimeOffset? lastReadingDate;
+    public DateTimeOffset? LastReadingDate
     {
         get => lastReadingDate;
         set => SetProperty(ref lastReadingDate, value);
@@ -57,6 +73,13 @@ public class HomeViewModel : ViewModelBase
         set => SetProperty(ref lastReading, value);
     }
 
+    private bool listenerIsRunning;
+    public bool ListenerIsRunning
+    {
+        get => listenerIsRunning;
+        set => SetProperty(ref listenerIsRunning, value);
+    }
+
     #endregion
 
     public HomeViewModel(IGpsManager manager, IDeviceService deviceService, ILoggingService loggingService, INavigationService navigationService) 
@@ -65,14 +88,16 @@ public class HomeViewModel : ViewModelBase
         GpsManager = manager;
         DeviceService = deviceService;
 
-        if (DeviceService.GpsServicesEnabled()) 
+        var gpsEnabled = DeviceService.GpsServicesEnabled();
+        LoggingService.Log($"(HomeViewModel) (CTOR): current listener is running: {GpsManager.CurrentListener != null}, gps-enabled:{gpsEnabled}");
+        ListenerIsRunning = GpsManager.CurrentListener != null && gpsEnabled;
+
+        SubscribeToLocationChanges();
+        if (gpsEnabled && !ListenerIsRunning) 
         {
-            SubscribeToLocationChanges();
-            Task.Run(StartListener);
+            Task.Run(async () => ListenerIsRunning = await StartListener());
             return;
         }
-        
-        //TODO show error and require page reload
     }
 
     public void Dispose() {
@@ -82,19 +107,32 @@ public class HomeViewModel : ViewModelBase
 
     public void SubscribeToLocationChanges() 
     {
-        this.subscription = GpsManager.WhenReading().Subscribe(reading => {
+        LoggingService.Log($"(HomeViewModel) (SubscribeToLocationChanges): loc-subscription listening:{subscription != null}");
+        if (subscription != null) return;
+        subscription = GpsManager.WhenReading().Subscribe(reading => {
             LastReading = reading;
-            LastReadingDate = DateTime.Now;
+            LastReadingDate = reading.Timestamp;
         });
     }
 
-    public async Task StartListener()
+    public async Task<bool> StartListener()
     {
-        await GpsManager.StartListener(new GpsRequest
+        try
         {
-            Accuracy = GpsAccuracy.High,
-            BackgroundMode = GpsBackgroundMode.Realtime,
-            DistanceFilterMeters = 5
-        });
+            await GpsManager.StartListener(new GpsRequest
+            {
+                Accuracy = GpsAccuracy.High,
+                BackgroundMode = GpsBackgroundMode.Realtime,
+                DistanceFilterMeters = 5
+            });
+
+            return true;
+        }
+        catch (Exception ex) 
+        {
+            LoggingService.Log($"(HomeViewModel) (StartListener): ERROR {ex.Message}");
+            var t = ex.Message == "There is already a GPS listener running";
+            return ex.Message == "There is already a GPS listener running" ;
+        }
     }
 }

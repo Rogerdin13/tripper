@@ -15,7 +15,7 @@ namespace Tripper.Delegates
         protected override async Task OnGpsReading(GpsReading reading)
         {
             var loggingSerive = Application.Current!.Handler.MauiContext!.Services.GetServices<LoggingService>().First();
-            loggingSerive.Log($"MyGpsDelegate-OnmGpsReading was triggered, reading: {reading}");
+            loggingSerive.Log($"(MyGpsDelegate) (OnmGpsReading): {reading}");
         }
     }
 
@@ -24,7 +24,10 @@ namespace Tripper.Delegates
     {
         public void Configure(AndroidX.Core.App.NotificationCompat.Builder builder)
         {
-        
+            builder.SetContentTitle("Tripper")
+                   .SetContentText("Listening to locationchanges");
+                   //.SetSmallIcon(Resource.Mipmap.youricon);
+            
         }
     }
 #endif
