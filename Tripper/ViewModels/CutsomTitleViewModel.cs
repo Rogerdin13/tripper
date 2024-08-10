@@ -7,17 +7,24 @@ namespace Tripper.ViewModels;
 
 public class CustomTitleViewModel : ViewModelBase
 {
+    private bool isLogPage = false;
+
     #region commands
 
-    public ICommand SwitchToLogPageCommand => new Command(async () =>
+    public ICommand GoToLogPageCommand => new Command(async () =>
     {
-        var currentPage = PageAccessor?.Page.Navigation.NavigationStack[0].Title;
-        var pageToGoTo = currentPage == "Home" ? "NavigationPage/LogPage" : "NavigationPage/Home";
-        await NavigationService.NavigateAsync(pageToGoTo);
+        if (isLogPage)
+        {
+            isLogPage = false;
+            await NavigationService.GoBackAsync();
+            return;
+        }
+        isLogPage = true;
+        await NavigationService.NavigateAsync("NavigationPage/LogPage");
     });
 
     #endregion
 
-    public CustomTitleViewModel(ILoggingService loggingService, INavigationService navigationService, IPageAccessor pageAccessor) 
-        : base(loggingService, navigationService, pageAccessor) { }
+    public CustomTitleViewModel(ILoggingService loggingService, INavigationService navigationService) 
+        : base(loggingService, navigationService) { }
 }

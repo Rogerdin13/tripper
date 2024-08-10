@@ -49,12 +49,12 @@ namespace Tripper
             builder.Services.AddSingleton<ILoggingService, LoggingService>();
 
             // MVVM Pages
+            builder.Services.RegisterForNavigation<NavigationPage>();
             builder.Services.RegisterForNavigation<Home, HomeViewModel>();
             builder.Services.RegisterForNavigation<LogPage, LogPageViewModel>();
             builder.Services.RegisterForNavigation<InitializationPage, InitializationPageViewModel>();
 
             // View VMs
-            builder.Services.AddTransient<CustomTitle>();
             builder.Services.AddTransient<CustomTitleViewModel>();
 
             return builder;

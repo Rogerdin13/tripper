@@ -3,23 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Tripper.ViewModels"
              x:Class="Tripper.Views.CustomTitle"
-             HeightRequest="55">
+             HeightRequest="55"
+             BackgroundColor="#eeeeee">
 
     <ContentView.Content>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="1" 
-                 Text="Log"
-                 TextColor="Black"
-                 BackgroundColor="Aqua"
-                 HeightRequest="27"
-                 WidthRequest="27"
-                 VerticalOptions="Center"
-                 Command="{Binding SwitchToLogPageCommand}"/>
+                    Text="Log"
+                    TextColor="Black"
+                    BackgroundColor="Black"
+                    HeightRequest="27"
+                    WidthRequest="27"
+                    VerticalOptions="Center"
+                    Command="{Binding GoToLogPageCommand}"/>
 
         </Grid>
     </ContentView.Content>

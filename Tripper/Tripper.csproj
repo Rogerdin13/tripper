@@ -104,4 +104,6 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionTripperHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionTripperHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
 </Project>

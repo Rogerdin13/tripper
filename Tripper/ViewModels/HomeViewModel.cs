@@ -51,9 +51,9 @@ public class HomeViewModel : ViewModelBase
 
     #endregion
 
-    public HomeViewModel(IGpsManager manager, ILoggingService loggingService, INavigationService navigationService, IPageAccessor pageAccessor) 
-        : base(loggingService, navigationService, pageAccessor) 
-    { 
+    public HomeViewModel(IGpsManager manager, ILoggingService loggingService, INavigationService navigationService) 
+        : base(loggingService, navigationService) 
+    {
         this.manager = manager;
         SubscribeToLocationChanges();
     }
