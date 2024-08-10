@@ -18,5 +18,6 @@ public class CustomTitleViewModel : ViewModelBase
 
     #endregion
 
-    public CustomTitleViewModel(ILoggingService loggingService, INavigationService navigationService, IPageAccessor pageAccessor) : base(loggingService, navigationService, pageAccessor) { }
+    public CustomTitleViewModel(ILoggingService loggingService, INavigationService navigationService, IPageAccessor pageAccessor) 
+        : base(loggingService, navigationService, pageAccessor) { }
 }

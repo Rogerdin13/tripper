@@ -54,7 +54,8 @@ namespace Tripper
             builder.Services.RegisterForNavigation<InitializationPage, InitializationPageViewModel>();
 
             // View VMs
-            ViewModelLocationProvider.Register<CustomTitle, CustomTitleViewModel>();
+            builder.Services.AddTransient<CustomTitle>();
+            builder.Services.AddTransient<CustomTitleViewModel>();
 
             return builder;
         }
