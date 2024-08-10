@@ -9,7 +9,7 @@ namespace Tripper
 
     public static class MauiProgram
     {
-        public static MauiApp CreateMauiApp()
+        public static MauiApp CreateMauiApp(Action<MauiAppBuilder>? registerPflatformServices = null)
         {
             var builder = MauiApp
                 .CreateBuilder()
@@ -40,7 +40,8 @@ namespace Tripper
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
-                .RegisterTypes();
+                .RegisterTypes()
+                .RegisterPlatformServices(registerPflatformServices);
 
             builder.Configuration.AddJsonPlatformBundle();
 
@@ -72,6 +73,13 @@ namespace Tripper
 
             // View VMs
             builder.Services.AddSingleton<CustomTitleViewModel>();
+
+            return builder;
+        }
+
+        private static MauiAppBuilder RegisterPlatformServices(this MauiAppBuilder builder, Action<MauiAppBuilder>? registerPflatformServices)
+        {
+            registerPflatformServices?.Invoke(builder);
 
             return builder;
         }

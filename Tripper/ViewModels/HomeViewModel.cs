@@ -9,7 +9,8 @@ namespace Tripper.ViewModels;
 
 public class HomeViewModel : ViewModelBase
 {
-    private readonly IGpsManager manager;
+    private readonly IGpsManager GpsManager;
+    private readonly IDeviceService DeviceService;
     private IDisposable? subscription;
 
     #region refresh binding props
@@ -58,12 +59,20 @@ public class HomeViewModel : ViewModelBase
 
     #endregion
 
-    public HomeViewModel(IGpsManager manager, ILoggingService loggingService, INavigationService navigationService) 
+    public HomeViewModel(IGpsManager manager, IDeviceService deviceService, ILoggingService loggingService, INavigationService navigationService) 
         : base(loggingService, navigationService) 
     {
-        this.manager = manager;
-        SubscribeToLocationChanges();
-        Task.Run(StartListener);
+        GpsManager = manager;
+        DeviceService = deviceService;
+
+        if (DeviceService.GpsServicesEnabled()) 
+        {
+            SubscribeToLocationChanges();
+            Task.Run(StartListener);
+            return;
+        }
+        
+        //TODO show error and require page reload
     }
 
     public void Dispose() {
@@ -73,7 +82,7 @@ public class HomeViewModel : ViewModelBase
 
     public void SubscribeToLocationChanges() 
     {
-        this.subscription = this.manager.WhenReading().Subscribe(reading => {
+        this.subscription = GpsManager.WhenReading().Subscribe(reading => {
             LastReading = reading;
             LastReadingDate = DateTime.Now;
         });
@@ -81,7 +90,7 @@ public class HomeViewModel : ViewModelBase
 
     public async Task StartListener()
     {
-        await manager.StartListener(new GpsRequest
+        await GpsManager.StartListener(new GpsRequest
         {
             Accuracy = GpsAccuracy.High,
             BackgroundMode = GpsBackgroundMode.Realtime,
