@@ -18,11 +18,13 @@ namespace Tripper
                     new DryIocContainerExtension(),
                     prism => prism.OnInitialized(container =>
                     {
+                        // listen to navigation
                         var eventAggregator = container.Resolve<IEventAggregator>();
                         eventAggregator.GetEvent<NavigationRequestEvent>().Subscribe(context => {
                             var type = context.Type;
                             var wasSuccess = context.Result.Success;
 
+                            // handle titleView tripwire manually since this navigation stuff works too weirdly -.-
                             if(type == NavigationRequestType.GoBack && wasSuccess)
                             {
                                 var ctvm = Application.Current!.Handler.MauiContext!.Services.GetServices<CustomTitleViewModel>().First();
@@ -67,7 +69,6 @@ namespace Tripper
             // MVVM Pages
             builder.Services.RegisterForNavigation<Home, HomeViewModel>();
             builder.Services.RegisterForNavigation<LogPage, LogPageViewModel>();
-            builder.Services.RegisterForNavigation<InitializationPage, InitializationPageViewModel>();
 
             // View VMs
             builder.Services.AddSingleton<CustomTitleViewModel>();

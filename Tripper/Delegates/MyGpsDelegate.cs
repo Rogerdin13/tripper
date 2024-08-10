@@ -1,4 +1,5 @@
 using Shiny.Locations;
+using Tripper.Services;
 
 namespace Tripper.Delegates
 {
@@ -13,9 +14,8 @@ namespace Tripper.Delegates
 
         protected override async Task OnGpsReading(GpsReading reading)
         {
-            var logstring1 = $"{reading.Position.Latitude} / {reading.Position.Longitude} - H: {reading.Heading}";
-            var logstring2 = $"Accuracy: {reading.PositionAccuracy} - SP: {reading.Speed}";
-            var timestamp = reading.Timestamp;
+            var loggingSerive = Application.Current!.Handler.MauiContext!.Services.GetServices<LoggingService>().First();
+            loggingSerive.Log($"MyGpsDelegate-OnmGpsReading was triggered, reading: {reading}");
         }
     }
 

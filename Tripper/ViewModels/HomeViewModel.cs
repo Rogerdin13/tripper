@@ -21,6 +21,13 @@ public class HomeViewModel : ViewModelBase
         set => SetProperty(ref isRefreshing, value);
     }
 
+    private Color platformRefreshColor = DeviceInfo.Platform == DevicePlatform.iOS ? new Color(255,255,255) : new Color(0,0,0);
+    public Color PlatformRefreshColor
+    {
+        get => platformRefreshColor;
+        set => SetProperty(ref platformRefreshColor, value);
+    }
+
     public ICommand RefreshingCommand => new Command(() =>
     {
         if(IsRefreshing) return;
@@ -56,10 +63,10 @@ public class HomeViewModel : ViewModelBase
     {
         this.manager = manager;
         SubscribeToLocationChanges();
+        Task.Run(StartListener);
     }
 
     public void Dispose() {
-        manager?.StopListener();
         subscription?.Dispose();
     }
 
@@ -67,7 +74,6 @@ public class HomeViewModel : ViewModelBase
     public void SubscribeToLocationChanges() 
     {
         this.subscription = this.manager.WhenReading().Subscribe(reading => {
-            //TODO log reading
             LastReading = reading;
             LastReadingDate = DateTime.Now;
         });

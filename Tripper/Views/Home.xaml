@@ -9,9 +9,24 @@
     <NavigationPage.TitleView>
         <views:CustomTitle/>
     </NavigationPage.TitleView>
-
-    <VerticalStackLayout>
-        <Label Text="Test" TextColor="#fff"/>
-    </VerticalStackLayout>
+    
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                Command="{Binding RefreshCommand}"
+                 RefreshColor="{Binding PlatformRefreshColor}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column ="0"
+                   Text="{Binding LastReading}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center"/>
+            <Label Grid.Column ="1"
+                   Text="{Binding LastReadingDate}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center"/>
+        </Grid>
+    </RefreshView>
 
 </ContentPage>
