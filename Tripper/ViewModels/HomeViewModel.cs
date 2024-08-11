@@ -1,5 +1,4 @@
 ﻿using Shiny.Locations;
-using System.Runtime.CompilerServices;
 using Tripper.Helpers;
 using Tripper.Interfaces.Services;
 
@@ -13,6 +12,7 @@ public class HomeViewModel : ViewModelBase
     private readonly IDistanceService DistanceService;
     private IDisposable? subscription = null;
     private bool refreshInProgress;
+    private bool resetInProgress;
 
     #region refresh binding props
 
@@ -99,8 +99,13 @@ public class HomeViewModel : ViewModelBase
         PartialDistance = DistanceService.PartialDistance();
     });
 
-    public ICommand PartialResetCommand => new Command(() => {
+    public ICommand PartialResetCommand => new Command(async () => {
+        if (resetInProgress) return;
+
+        resetInProgress = true;
+        _ = await DistanceService.ResetPartialDistance();
         PartialDistance = DistanceService.PartialDistance();
+        resetInProgress = false;
     });
 
     #endregion

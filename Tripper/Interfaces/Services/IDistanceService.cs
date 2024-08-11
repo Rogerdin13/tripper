@@ -20,7 +20,7 @@ namespace Tripper.Interfaces.Services
         ///     resets only the partial distance
         /// </summary>
         /// <returns></returns>
-        bool ResetPartialDistance();
+        Task<bool> ResetPartialDistance();
         double TotalDistance();
         double PartialDistance();
     }

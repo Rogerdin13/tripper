@@ -53,7 +53,7 @@ public class DistanceService : IDistanceService
         }
         catch (Exception ex)
         {
-            LoggingService.Log($"{ex.Message}");
+            LoggingService.Log($"ERROR {ex.Message}");
             return false;
         }
     }
@@ -63,16 +63,16 @@ public class DistanceService : IDistanceService
 
     #region distance managment
 
-    public bool ResetPartialDistance()
+    public async Task<bool> ResetPartialDistance()
     {
         try
         {
-            PartialDistanceCounter = 0.0;
-            return true;
+            var success = await AddCurrentPosition();
+            return success;
         }
         catch (Exception ex)
         {
-            LoggingService.Log($"{ex.Message}");
+            LoggingService.Log($"ERROR {ex.Message}");
             return false;
         }
     }
@@ -102,13 +102,45 @@ public class DistanceService : IDistanceService
 
         LoggingService.Log($"Calculating new distance: new: {newPos} | old: {lastPos}");
 
-        // in meters
+        // in meters with max 3 decimal characters
         var distance = Math.Round(Location.CalculateDistance(lastPos.Latitude, lastPos.Longitude, newPos.Latitude, newPos.Longitude, DistanceUnits.Kilometers)*1000, 3);
 
         LoggingService.Log($"Distance calculated: {distance}m");
 
         TotalDistanceCounter += distance;
         PartialDistanceCounter += distance;
+    }
+
+    private async Task<bool> AddCurrentPosition()
+    {
+        try
+        {
+            var loc = await GetDeviceCurrentLocation();
+            if(loc == null) return false;
+            var pos = new Position(loc.Latitude, loc.Longitude);
+            AddPosition(pos);
+            return true;
+        }
+        catch (Exception ex) 
+        {
+            LoggingService.Log($"ERROR {ex.Message}");
+            return false;
+        }
+    }
+
+    private async Task<Location?> GetDeviceCurrentLocation()
+    {
+        try
+        {
+            var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(1));
+            var location = await Geolocation.Default.GetLocationAsync(request); //TODO add cancelation token for comfort and better request managment
+            return location;
+        }
+        catch (Exception ex)
+        {
+            LoggingService.Log($"ERROR {ex.Message}");
+            return null;
+        }
     }
 
     #endregion
