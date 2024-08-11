@@ -69,8 +69,21 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <Button Grid.Column="0" Grid.Row="1" Text="RESET Total" Background="#666666" TextColor="#ffffff" FontSize="28" Command="{Binding TotalResetCommand}"/>
-            <Button Grid.Column="1" Grid.Row="1" Text="RESET Partial" Background="#888888" TextColor="#ffffff" FontSize="28" IsEnabled="{Binding resetInProgress, Converter={StaticResource BoolInverter}}" Command="{Binding PartialResetCommand}"/>
+            <Button Grid.Column="0" 
+                    Grid.Row="1" 
+                    Text="RESET Total" 
+                    Background="#666666" 
+                    TextColor="#ffffff" 
+                    FontSize="28" 
+                    Command="{Binding TotalResetCommand}"/>
+            <Button Grid.Column="1" 
+                    Grid.Row="1" 
+                    Text="RESET Partial" 
+                    Background="#888888" 
+                    TextColor="#ffffff" 
+                    FontSize="28" 
+                    IsEnabled="{Binding resetInProgress, Converter={StaticResource BoolInverter}}" 
+                    Command="{Binding PartialResetCommand}"/>
             
         </Grid>
 

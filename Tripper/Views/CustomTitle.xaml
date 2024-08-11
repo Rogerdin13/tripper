@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:Tripper.ViewModels"
              x:Class="Tripper.Views.CustomTitle"
              HeightRequest="55"
-             BackgroundColor="#eeeeee">
+             BackgroundColor="#666666">
 
     <ContentView.Content>
         <Grid>
