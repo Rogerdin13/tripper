@@ -101,6 +101,10 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Helpers\Enums\" />
+	</ItemGroup>
+
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionTripperHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionTripperHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

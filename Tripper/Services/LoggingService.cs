@@ -23,11 +23,6 @@ public class LoggingService : ILoggingService
         InitLog();
     }
 
-    /// <summary>
-    ///     Logs to local file in AppSpecific files
-    /// </summary>
-    /// <param name="message"></param>
-    /// <exception cref="NotImplementedException"></exception>
     public void Log(string message)
     {
         StackFrame frame = new StackFrame(1, true);
@@ -48,11 +43,6 @@ public class LoggingService : ILoggingService
         }
     }
     
-    /// <summary>
-    ///     Returns local log-file contents
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public string GetLog()
     {
         using (var streamReader = new StreamReader(logFileNameAndPath))
@@ -61,10 +51,6 @@ public class LoggingService : ILoggingService
         }
     }
 
-    /// <summary>
-    ///     Deletes and creates clean new log-file
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
     public void ClearLog()
     {
         logNeedsCleanup = true;
@@ -73,6 +59,14 @@ public class LoggingService : ILoggingService
 
     #region private
 
+    /// <summary>
+    ///     checks:
+    ///         if log already exists
+    ///         if old log it too old (only holds log for the current day)
+    ///         if log needs general cleanup
+    ///         
+    ///     then it overwrites/creates the log-file or just logs that the log was reinitialized
+    /// </summary>
     private void InitLog()
     {
         var todayDateString = DateTime.UtcNow.ToLocalTime().ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
