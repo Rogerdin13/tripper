@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Tripper.ViewModels"
              x:Class="Tripper.Views.CustomTitle"
-             HeightRequest="55"
-             BackgroundColor="#bbbbbb">
+             HeightRequest="60"
+             BackgroundColor="#ffffff">
 
     <ContentView.Content>
         <Grid>
@@ -15,11 +15,13 @@
 
             <Button Grid.Column="1" 
                     Text="&#9783;"
+                    FontAttributes="Bold"
+                    FontSize="18"
                     Padding="0"
                     Margin="0"
-                    TextColor="#ffffff"
-                    BackgroundColor="#000000"
-                    BorderColor="#ffffff"
+                    TextColor="#000000"
+                    BackgroundColor="#dddddd"
+                    BorderColor="#999999"
                     HeightRequest="33"
                     WidthRequest="33"
                     VerticalOptions="Center"

@@ -26,9 +26,11 @@
             </Grid.ColumnDefinitions>
 
             <ScrollView Grid.ColumnSpan="2" Grid.Row="0">
-                <VerticalStackLayout>
+                <Grid>
                     <Label Text="Tripper not running -> please check if GPS in enabled &amp; try to refresh the page."
-                           TextColor="#ff2222"
+                           TextColor="#ff0000"
+                           FontAttributes="Bold"
+                           FontSize="16"
                            VerticalTextAlignment="Center"
                            HorizontalTextAlignment="Center"
                            IsVisible="{Binding ListenerIsRunning, Converter={StaticResource BoolInverter}}"/>
@@ -66,7 +68,7 @@
                            VerticalOptions="End" 
                            HorizontalOptions="End"
                            IsVisible="{Binding ListenerIsRunning}"/>
-                </VerticalStackLayout>
+                </Grid>
             </ScrollView>
 
             <Button Grid.Column="0" 

@@ -26,8 +26,8 @@ public class LoggingService : ILoggingService
     public void Log(string message)
     {
         StackFrame frame = new StackFrame(1, true);
-        var method = frame.GetMethod();
-        var callerFileName = frame.GetFileName()?.Split('\\').Last().Split('.')[0];
+        var method = frame.GetMethod();//TODO remove () + params from methods
+        var callerFileName = frame.GetFileName()?.Split('\\').Last().Split('.')[0]; //TODO rework logging for ctor
         var lineNumber = frame.GetFileLineNumber();
 
         try
