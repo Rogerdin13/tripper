@@ -66,6 +66,7 @@ namespace Tripper
         {
             // Services
             builder.Services.AddSingleton<ILoggingService, LoggingService>();
+            builder.Services.AddSingleton<IDistanceService, DistanceService>();
 
             // MVVM Pages
             builder.Services.RegisterForNavigation<Home, HomeViewModel>();

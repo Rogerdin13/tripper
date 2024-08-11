@@ -10,6 +10,7 @@ public class HomeViewModel : ViewModelBase
 {
     private readonly IGpsManager GpsManager;
     private readonly IDeviceService DeviceService;
+    private readonly IDistanceService DistanceService;
     private IDisposable? subscription = null;
     private bool refreshInProgress;
 
@@ -59,13 +60,6 @@ public class HomeViewModel : ViewModelBase
 
     #region binding props
 
-    private DateTimeOffset? lastReadingDate;
-    public DateTimeOffset? LastReadingDate
-    {
-        get => lastReadingDate.GetValueOrDefault().ToLocalTime();
-        set => SetProperty(ref lastReadingDate, value);
-    }
-
     private GpsReading? lastReading;
     public GpsReading? LastReading
     { 
@@ -80,21 +74,44 @@ public class HomeViewModel : ViewModelBase
         set => SetProperty(ref listenerIsRunning, value);
     }
 
-    private double totalDistance = .0;
+    private double totalDistance;
     public double TotalDistance
     {
         get => totalDistance;
         set => SetProperty(ref totalDistance, value);
     }
 
+    private double partialDistance;
+    public double PartialDistance
+    {
+        get => partialDistance;
+        set => SetProperty(ref partialDistance, value);
+    }
 
     #endregion
 
-    public HomeViewModel(IGpsManager manager, IDeviceService deviceService, ILoggingService loggingService, INavigationService navigationService) 
+
+    #region button commands
+
+    public ICommand TotalResetCommand => new Command(() => {
+        DistanceService.ResetTrip();
+        TotalDistance = DistanceService.TotalDistance();
+        PartialDistance = DistanceService.PartialDistance();
+    });
+
+    public ICommand PartialResetCommand => new Command(() => {
+        PartialDistance = DistanceService.PartialDistance();
+    });
+
+    #endregion
+
+
+    public HomeViewModel(IGpsManager manager, IDeviceService deviceService, ILoggingService loggingService, INavigationService navigationService, IDistanceService distanceService) 
         : base(loggingService, navigationService) 
     {
         GpsManager = manager;
         DeviceService = deviceService;
+        DistanceService = distanceService;
 
         var gpsEnabled = DeviceService.GpsServicesEnabled();
         LoggingService.Log($"current listener is running: {GpsManager.CurrentListener != null}, gps-enabled:{gpsEnabled}");
@@ -119,8 +136,9 @@ public class HomeViewModel : ViewModelBase
         if (subscription != null) return;
         subscription = GpsManager.WhenReading().Subscribe(reading => {
             LastReading = reading;
-            LastReadingDate = reading.Timestamp;
-            //TODO implement push stack and totalDistance computation
+            DistanceService.AddPosition(reading.Position);
+            TotalDistance = DistanceService.TotalDistance();
+            PartialDistance = DistanceService.PartialDistance();
         });
     }
 
