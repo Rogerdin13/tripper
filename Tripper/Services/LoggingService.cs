@@ -23,12 +23,9 @@ public class LoggingService : ILoggingService
         InitLog();
     }
 
-    public void Log(string message)
+    public void Log(string message, [CallerMemberName] string method = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
-        StackFrame frame = new StackFrame(1, true);
-        var method = frame.GetMethod();//TODO remove () + params from methods
-        var callerFileName = frame.GetFileName()?.Split('\\').Last().Split('.')[0]; //TODO rework logging for ctor
-        var lineNumber = frame.GetFileLineNumber();
+        var callerFileName = filePath.Split('\\').Last().Split('.')[0];
 
         try
         {

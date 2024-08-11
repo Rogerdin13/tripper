@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tripper.Interfaces.Services;
 
@@ -10,7 +11,7 @@ public interface ILoggingService
     ///     <para>Format:  [{DateTime.UtcNow.ToLocalTime():HH:mm:ss}] [{className}.{method}/{lineNumber}]: {message}</para>
     /// </summary>
     /// <param name="message"></param>
-    void Log(string message);
+    void Log(string message, [CallerMemberName] string method = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int line = 0);
     /// <summary>
     ///     <para>Returns current contents of the local log file</para>
     /// </summary>
