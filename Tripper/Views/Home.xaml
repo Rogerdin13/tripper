@@ -20,28 +20,29 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
-        
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="9*"/>
+            </Grid.ColumnDefinitions>
+
             <ScrollView Grid.ColumnSpan="2" Grid.Row="0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.ColumnSpan="2" 
-                           Text="Tripper not running -> please check if GPS in enabled &amp; try to refresh the page."
+                <VerticalStackLayout>
+                    <Label Text="Tripper not running -> please check if GPS in enabled &amp; try to refresh the page."
                            TextColor="#ff2222"
                            VerticalTextAlignment="Center"
                            HorizontalTextAlignment="Center"
                            IsVisible="{Binding ListenerIsRunning, Converter={StaticResource BoolInverter}}"/>
-                    <Label Grid.ColumnSpan="2"
-                           Padding="5"
+                    <Label Padding="5"
                            VerticalTextAlignment="Center"
                            HorizontalTextAlignment="Start"
                            IsVisible="{Binding ListenerIsRunning}">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Distnace: "/>
-                                <Span Text="{Binding TotalDistance}"/>
+                                <Span Text="Distance: "/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="{Binding TotalDistance, StringFormat='Total: {}{0:N0}'}"/>
+                                <Span Text="{x:Static system:Environment.NewLine}"/>
+                                <Span Text="{Binding PartialDistance, StringFormat='Partial: {}{0:N0}'}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
@@ -61,15 +62,15 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
-                    <Label Grid.Column ="1"
-                           Text="{Binding LastReadingDate, Converter={StaticResource OffsetToTimeConverter}}"
+                    <Label Text="{Binding LastReading.Timestamp, Converter={StaticResource OffsetToTimeConverter}}"
                            VerticalOptions="End" 
                            HorizontalOptions="End"
                            IsVisible="{Binding ListenerIsRunning}"/>
-                </Grid>
+                </VerticalStackLayout>
             </ScrollView>
-            
-            <Button Grid.ColumnSpan="2" Grid.Row="1" Text="RESET" Background="#888888" TextColor="#ffffff" FontSize="28"/>
+
+            <Button Grid.Column="0" Grid.Row="1" Text="RESET Total" Background="#666666" TextColor="#ffffff" FontSize="28"/>
+            <Button Grid.Column="1" Grid.Row="1" Text="RESET Partial" Background="#888888" TextColor="#ffffff" FontSize="28"/>
             
         </Grid>
 
