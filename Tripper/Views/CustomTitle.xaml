@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:Tripper.ViewModels"
              x:Class="Tripper.Views.CustomTitle"
              HeightRequest="55"
-             BackgroundColor="#666666">
+             BackgroundColor="#bbbbbb">
 
     <ContentView.Content>
         <Grid>
@@ -14,11 +14,14 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="1" 
-                    Text="Log"
-                    TextColor="Black"
-                    BackgroundColor="Black"
-                    HeightRequest="27"
-                    WidthRequest="27"
+                    Text="&#9783;"
+                    Padding="0"
+                    Margin="0"
+                    TextColor="#ffffff"
+                    BackgroundColor="#000000"
+                    BorderColor="#ffffff"
+                    HeightRequest="33"
+                    WidthRequest="33"
                     VerticalOptions="Center"
                     Command="{Binding GoToLogPageCommand}"/>
 

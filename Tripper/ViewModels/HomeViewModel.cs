@@ -102,13 +102,15 @@ public class HomeViewModel : ViewModelBase
     }
 
     public ICommand TotalResetCommand => new Command(() => {
+        if (!ListenerIsRunning) return;
+
         DistanceService.ResetTrip();
         TotalDistance = DistanceService.TotalDistance();
         PartialDistance = DistanceService.PartialDistance();
     });
 
     public ICommand PartialResetCommand => new Command(async () => {
-        if (ResetInProgress) return;
+        if (ResetInProgress || !ListenerIsRunning) return;
         ResetInProgress = true;
 
         _ = await DistanceService.ResetPartialDistance();

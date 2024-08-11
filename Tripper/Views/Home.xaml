@@ -22,7 +22,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
 
             <ScrollView Grid.ColumnSpan="2" Grid.Row="0">
@@ -71,18 +71,20 @@
 
             <Button Grid.Column="0" 
                     Grid.Row="1" 
-                    Text="RESET Total" 
-                    Background="#666666" 
+                    VerticalOptions="CenterAndExpand"
+                    HorizontalOptions="CenterAndExpand"
+                    Text="&#9747;" 
+                    Background="#990000" 
                     TextColor="#ffffff" 
                     FontSize="28" 
                     Command="{Binding TotalResetCommand}"/>
             <Button Grid.Column="1" 
                     Grid.Row="1" 
                     Text="RESET Partial" 
-                    Background="#888888" 
+                    Background="#666666" 
                     TextColor="#ffffff" 
                     FontSize="28" 
-                    IsEnabled="{Binding resetInProgress, Converter={StaticResource BoolInverter}}" 
+                    IsEnabled="{Binding ResetInProgress, Converter={StaticResource BoolInverter}}" 
                     Command="{Binding PartialResetCommand}"/>
             
         </Grid>
