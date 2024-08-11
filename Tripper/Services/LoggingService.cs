@@ -35,8 +35,8 @@ public class LoggingService : ILoggingService
             }
         }
         catch 
-        { 
-            // Oh NO... anyways
+        {
+            // Oh NO... anyways https://www.youtube.com/watch?v=lv-mD3qtalw
         }
     }
     
