@@ -12,7 +12,7 @@ public class HomeViewModel : ViewModelBase
     private readonly IDistanceService DistanceService;
     private IDisposable? subscription = null;
     private bool refreshInProgress;
-    private bool resetInProgress;
+    
 
     #region refresh binding props
 
@@ -58,6 +58,7 @@ public class HomeViewModel : ViewModelBase
 
     #endregion
 
+
     #region binding props
 
     private GpsReading? lastReading;
@@ -91,7 +92,14 @@ public class HomeViewModel : ViewModelBase
     #endregion
 
 
-    #region button commands
+    #region button commands & binding props
+
+    private bool resetInProgress;
+    public bool ResetInProgress
+    {
+        get => resetInProgress;
+        set => SetProperty(ref resetInProgress, value);
+    }
 
     public ICommand TotalResetCommand => new Command(() => {
         DistanceService.ResetTrip();
@@ -100,12 +108,13 @@ public class HomeViewModel : ViewModelBase
     });
 
     public ICommand PartialResetCommand => new Command(async () => {
-        if (resetInProgress) return;
+        if (ResetInProgress) return;
+        ResetInProgress = true;
 
-        resetInProgress = true;
         _ = await DistanceService.ResetPartialDistance();
         PartialDistance = DistanceService.PartialDistance();
-        resetInProgress = false;
+
+        ResetInProgress = false;
     });
 
     #endregion
