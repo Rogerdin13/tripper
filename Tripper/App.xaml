@@ -12,11 +12,15 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Templates.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <!-- CONVERTERS -->
             <converters:BoolInverter x:Key="BoolInverter"/>
             <converters:OffsetToTimeConverter x:Key="OffsetToTimeConverter"/>
-            
+            <converters:HeadingConverter x:Key="HeadingConverter"/>
+            <converters:DistanceConverter x:Key="DistanceConverter"/>
+            <converters:SpeedConverter x:Key="SpeedConverter"/>
+            <converters:AltitudeConverter x:Key="AltitudeConverter"/>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

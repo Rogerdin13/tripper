@@ -32,7 +32,7 @@ public class DistanceService : IDistanceService
         {
 
             PositionList.Insert(0, position);
-            CalculateNewDistances();
+            if(PositionList.Count > 1) CalculateNewDistances();
             return true;
         }
         catch (Exception ex)
@@ -104,12 +104,12 @@ public class DistanceService : IDistanceService
         var newPos = PositionList[0];
         var lastPos = PositionList[1];
 
-        LoggingService.Log($"Calculating new distance: new: {newPos} | old: {lastPos}");
+        LoggingService.Log($"Calculating new distance: new: {newPos.Latitude:0.0000};{newPos.Longitude:0.0000} | old: {lastPos.Latitude:0.0000};{lastPos.Longitude:0.0000}");
 
         // in meters with max 3 decimal characters
         var distance = Math.Round(Location.CalculateDistance(lastPos.Latitude, lastPos.Longitude, newPos.Latitude, newPos.Longitude, DistanceUnits.Kilometers)*1000, 3);
 
-        LoggingService.Log($"Distance calculated: {distance}m");
+        LoggingService.Log($"Distance calculated: {(int)Math.Floor(distance)}m");
 
         TotalDistanceCounter += distance;
         PartialDistanceCounter += distance;

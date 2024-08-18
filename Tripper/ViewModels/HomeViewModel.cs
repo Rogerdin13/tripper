@@ -174,7 +174,6 @@ public class HomeViewModel : ViewModelBase
         catch (Exception ex) 
         {
             LoggingService.Log($"ERROR {ex.Message}");
-            var t = ex.Message == "There is already a GPS listener running";
             return ex.Message == "There is already a GPS listener running" ;
         }
     }
