@@ -14,8 +14,6 @@ namespace Tripper.Delegates
 
         protected override async Task OnGpsReading(GpsReading reading)
         {
-            var loggingSerive = Application.Current!.Handler.MauiContext!.Services.GetServices<LoggingService>().First();
-            loggingSerive.Log($"{reading}");
         }
     }
 

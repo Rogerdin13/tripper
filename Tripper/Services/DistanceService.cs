@@ -37,7 +37,7 @@ public class DistanceService : IDistanceService
         }
         catch (Exception ex)
         {
-            LoggingService.Log($"{ex.Message}");
+            LoggingService.Log($"ERROR {ex.Message}");
             return false;
         }
     }
@@ -68,6 +68,10 @@ public class DistanceService : IDistanceService
         try
         {
             var success = await AddCurrentPosition();
+            if (success) { 
+                PartialDistanceCounter = 0.0;
+                LoggingService.Log("Added Current Pos and reset Partial");
+            }
             return success;
         }
         catch (Exception ex)

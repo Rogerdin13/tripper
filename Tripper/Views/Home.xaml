@@ -42,25 +42,29 @@
                             <FormattedString>
                                 <Span Text="Distance: "/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
-                                <Span Text="{Binding TotalDistance, StringFormat='Total: {}{0:N0}'}"/>
+                                <Span Text="Total: "/>
+                                <Span Text="{Binding TotalDistance}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
-                                <Span Text="{Binding PartialDistance, StringFormat='Partial: {}{0:N0}'}"/>
+                                <Span Text="Partial: "/>
+                                <Span Text="{Binding PartialDistance}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
-                                <Span Text="Position: "/>
                                 <Span Text="{Binding LastReading.Position.Latitude}"/>
                                 <Span Text=" | "/>
                                 <Span Text="{Binding LastReading.Position.Longitude}"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="Heading: "/>
                                 <Span Text="{Binding LastReading.Heading}"/>
+                                <Span Text="°"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="Altitude: "/>
                                 <Span Text="{Binding LastReading.Altitude}"/>
+                                <Span Text="feet"/>
                                 <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="Speed: "/>
                                 <Span Text="{Binding LastReading.Speed}"/>
+                                <Span Text="m/s"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
