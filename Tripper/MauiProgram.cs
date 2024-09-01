@@ -7,7 +7,6 @@ using Tripper.Views;
 
 namespace Tripper
 {
-
     public static class MauiProgram
     {
         public static MauiApp CreateMauiApp(Action<MauiAppBuilder>? registerPflatformServices = null)
