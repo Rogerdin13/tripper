@@ -1,5 +1,5 @@
 ﻿using Microsoft.Maui.LifecycleEvents;
-using Prism;
+using Shiny.Locations;
 using Tripper.Interfaces.Services;
 using Tripper.Services;
 using Tripper.ViewModels;
@@ -46,13 +46,15 @@ namespace Tripper
 #if ANDROID
                     events.AddAndroid(android => android.OnDestroy((del) =>
                     {
-
+                        var manager = ContainerLocator.Container.Resolve<IGpsManager>(); ;
+                        manager.StopListener();
                     }));
 #endif
 #if IOS
                     events.AddiOS(ios => ios.WillTerminate((app) => 
                     {
-                        
+                        var manager = ContainerLocator.Container.Resolve<IGpsManager>(); ;
+                        manager.StopListener();
                     }));
 #endif
                 })
