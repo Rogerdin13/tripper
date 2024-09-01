@@ -1,5 +1,4 @@
 ﻿using Shiny.Locations;
-using System;
 using Tripper.Interfaces.Services;
 
 namespace Tripper.Services;
@@ -8,16 +7,19 @@ public class DistanceService : IDistanceService
 {
     private readonly ILoggingService LoggingService;
 
-    // temporary storage here
+    // TODO add DB to persist this for exporting the route as a gpx route -> bery low prio milestone
     // ordered list (newest always first)
     private List<Position> PositionList = [];
-    private double TotalDistanceCounter = 0.0;
-    private double PartialDistanceCounter = 0.0;
+    private double TotalDistanceCounter = .0;
+    private double PartialDistanceCounter = .0;
 
 
     public DistanceService(ILoggingService loggingService)
     {
         LoggingService = loggingService;
+
+        TotalDistanceCounter = Preferences.Default.Get(Constants.PrefKEY_TOTAL_DISTANCE, .0);
+        PartialDistanceCounter = Preferences.Default.Get(Constants.PrefKEY_PARTI_DISTANCE, .0);
     }
 
     #region position managment
@@ -49,6 +51,10 @@ public class DistanceService : IDistanceService
             PositionList = new List<Position>();
             TotalDistanceCounter = 0.0;
             PartialDistanceCounter = 0.0;
+
+            Preferences.Default.Set(Constants.PrefKEY_TOTAL_DISTANCE, .0);
+            Preferences.Default.Set(Constants.PrefKEY_PARTI_DISTANCE, .0);
+
             return true;
         }
         catch (Exception ex)
@@ -108,6 +114,9 @@ public class DistanceService : IDistanceService
 
         TotalDistanceCounter += distance;
         PartialDistanceCounter += distance;
+
+        Preferences.Default.Set(Constants.PrefKEY_TOTAL_DISTANCE, TotalDistanceCounter);
+        Preferences.Default.Set(Constants.PrefKEY_PARTI_DISTANCE, PartialDistanceCounter);
     }
 
     private async Task<bool> AddCurrentPosition()

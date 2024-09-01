@@ -133,11 +133,12 @@ public class HomeViewModel : ViewModelBase
         DeviceService = deviceService;
         DistanceService = distanceService;
 
+        TotalDistance = DistanceService.TotalDistance();
+        PartialDistance = DistanceService.PartialDistance();
+
         var gpsEnabled = DeviceService.GpsServicesEnabled();
         LoggingService.Log($"current listener is running: {GpsManager.CurrentListener != null}, gps-enabled:{gpsEnabled}");
         ListenerIsRunning = GpsManager.CurrentListener != null && gpsEnabled;
-
-        PartialDistance = 10000.0;
 
         SubscribeToLocationChanges();
         if (gpsEnabled && !ListenerIsRunning) 
