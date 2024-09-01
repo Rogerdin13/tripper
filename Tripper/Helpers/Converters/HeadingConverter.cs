@@ -21,7 +21,7 @@ namespace Tripper.Helpers.Converters
             if (251 <= headingValue && headingValue <= 290) { return $"{headingValue}° W"; }
             if (291 <= headingValue && headingValue <= 340) { return $"{headingValue}° NW"; }
             if (341 <= headingValue && headingValue <= 360) { return $"{headingValue}° N"; }
-            return value;
+            return "0° N";
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -38,7 +38,7 @@
                         IsVisible="{Binding ListenerIsRunning}">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Total Distance: "/>
+                                <Span Text="Total: "/>
                                 <Span Text="{Binding TotalDistance, Converter={StaticResource DistanceConverter}}"/>
                                 <Span Text="m"/>
                             </FormattedString>
@@ -59,8 +59,6 @@
                         IsVisible="{Binding ListenerIsRunning}">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Last RESET:"/>
-                                <Span Text="{x:Static system:Environment.NewLine}"/>
                                 <Span Text="{Binding PartialDistance, Converter={StaticResource DistanceConverter}}" FontSize="88"/>
                                 <Span Text="m"/>
                             </FormattedString>
@@ -76,7 +74,7 @@
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="{Binding LastReading.Speed, Converter={StaticResource SpeedConverter}}"/>
-                                <Span Text="km/h"/>
+                                <Span Text=" km/h"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

@@ -61,7 +61,7 @@ public class HomeViewModel : ViewModelBase
 
     #region binding props
 
-    private GpsReading? lastReading;
+    private GpsReading? lastReading = new GpsReading(new Position(0, 0), 0, DateTimeOffset.Now, 0, 0, 0, 0, 0);
     public GpsReading? LastReading
     { 
         get => lastReading;
