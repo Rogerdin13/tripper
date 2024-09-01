@@ -9,11 +9,12 @@
     <ContentView.Content>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="1" 
+            <Button Grid.Column="2" 
                     Text="&#9783;"
                     FontAttributes="Bold"
                     FontSize="18"

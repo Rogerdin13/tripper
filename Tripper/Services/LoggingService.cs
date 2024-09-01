@@ -20,7 +20,7 @@ public class LoggingService : ILoggingService
         var appFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         logFileNameAndPath = Path.Combine(appFolder, Constants.logFileName);
 
-        InitLog();
+        Task.Run(InitLog);
     }
 
     public void Log(string message, [CallerMemberName] string method = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
@@ -40,18 +40,18 @@ public class LoggingService : ILoggingService
         }
     }
     
-    public string GetLog()
+    public async Task<string> GetLog()
     {
         using (var streamReader = new StreamReader(logFileNameAndPath))
         {
-            return streamReader.ReadToEnd();
+            return await streamReader.ReadToEndAsync();
         }
     }
 
-    public void ClearLog()
+    public async Task ClearLog()
     {
         logNeedsCleanup = true;
-        InitLog();
+        await InitLog();
     }
 
     #region private
@@ -64,11 +64,11 @@ public class LoggingService : ILoggingService
     ///         
     ///     then it overwrites/creates the log-file or just logs that the log was reinitialized
     /// </summary>
-    private void InitLog()
+    private async Task InitLog()
     {
         var todayDateString = DateTime.UtcNow.ToLocalTime().ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-        if (!File.Exists(logFileNameAndPath) || LogNeedsCleanup(todayDateString) || logNeedsCleanup)
+        if (!File.Exists(logFileNameAndPath) || await LogNeedsCleanup(todayDateString) || logNeedsCleanup)
         {
             var fs = File.Create(logFileNameAndPath);
             fs.Dispose();
@@ -82,11 +82,11 @@ public class LoggingService : ILoggingService
         Log($"---- Reinitialized: {todayDateString}");
     }
 
-    public bool LogNeedsCleanup(string today)
+    public async Task<bool> LogNeedsCleanup(string today)
     {
         try
         {
-            var logCreationDate = GetLogCreationDate();
+            var logCreationDate = await GetLogCreationDate();
 
             return logCreationDate != today;
         }
@@ -96,9 +96,9 @@ public class LoggingService : ILoggingService
         }
     }
 
-    public string GetLogCreationDate()
+    public async Task<string> GetLogCreationDate()
     {
-        var firstLineOfLog = GetLog().Split("\n")[0];
+        var firstLineOfLog = (await GetLog()).Split("\n")[0];
 
         // extract date from log and return trimmed
         return firstLineOfLog.Split(']')[1].Split(':')[2].Trim();

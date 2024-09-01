@@ -17,6 +17,6 @@ public class LogPageViewModel : ViewModelBase
     public LogPageViewModel(ILoggingService loggingService, INavigationService navigationService) 
         : base(loggingService, navigationService) 
     {
-        LogContents = LoggingService.GetLog();
+        Task.Run(async () => LogContents = await LoggingService.GetLog());
     }
 }

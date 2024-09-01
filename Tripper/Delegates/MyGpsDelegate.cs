@@ -7,8 +7,8 @@ namespace Tripper.Delegates
     {
         public MyGpsDelegate(ILogger<MyGpsDelegate> logger) : base(logger)
         {
-            this.MinimumDistance = Distance.FromMeters(9);
-            this.MinimumTime = TimeSpan.FromSeconds(11);
+            this.MinimumDistance = Distance.FromMeters(10);
+            this.MinimumTime = TimeSpan.FromSeconds(25);
         }
 
 

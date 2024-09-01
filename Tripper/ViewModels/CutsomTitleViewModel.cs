@@ -14,8 +14,15 @@ public class CustomTitleViewModel : ViewModelBase
     public ICommand GoToLogPageCommand => new Command(async () =>
     {
         if (isLogPage) return;
-        var result = await NavigationService.CreateBuilder().UseRelativeNavigation().AddSegment("Home/LogPage").NavigateAsync();
-        isLogPage = result.Success;
+        try
+        {
+            var result = await NavigationService.CreateBuilder().UseRelativeNavigation().AddSegment("Home/LogPage").NavigateAsync();
+            isLogPage = result.Success;
+        }
+        catch (Exception ex)
+        { 
+            isLogPage = false;
+        }        
     });
 
     #endregion

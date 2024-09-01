@@ -122,7 +122,11 @@ public class HomeViewModel : ViewModelBase
     #endregion
 
 
-    public HomeViewModel(IGpsManager manager, IDeviceService deviceService, ILoggingService loggingService, INavigationService navigationService, IDistanceService distanceService) 
+    public HomeViewModel(IGpsManager manager, 
+                         IDeviceService deviceService, 
+                         ILoggingService loggingService, 
+                         INavigationService navigationService, 
+                         IDistanceService distanceService) 
         : base(loggingService, navigationService) 
     {
         GpsManager = manager;
@@ -132,6 +136,8 @@ public class HomeViewModel : ViewModelBase
         var gpsEnabled = DeviceService.GpsServicesEnabled();
         LoggingService.Log($"current listener is running: {GpsManager.CurrentListener != null}, gps-enabled:{gpsEnabled}");
         ListenerIsRunning = GpsManager.CurrentListener != null && gpsEnabled;
+
+        PartialDistance = 10000.0;
 
         SubscribeToLocationChanges();
         if (gpsEnabled && !ListenerIsRunning) 

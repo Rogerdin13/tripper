@@ -1,4 +1,5 @@
-﻿using Prism;
+﻿using Microsoft.Maui.LifecycleEvents;
+using Prism;
 using Tripper.Interfaces.Services;
 using Tripper.Services;
 using Tripper.ViewModels;
@@ -39,6 +40,21 @@ namespace Tripper
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                })
+                .ConfigureLifecycleEvents(events =>
+                {
+#if ANDROID
+                    events.AddAndroid(android => android.OnDestroy((del) =>
+                    {
+
+                    }));
+#endif
+#if IOS
+                    events.AddiOS(ios => ios.WillTerminate((app) => 
+                    {
+                        
+                    }));
+#endif
                 })
                 .RegisterTypes()
                 .RegisterPlatformServices(registerPflatformServices);

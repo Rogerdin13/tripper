@@ -16,6 +16,6 @@ public interface ILoggingService
     ///     <para>Returns current contents of the local log file</para>
     /// </summary>
     /// <returns></returns>
-    string GetLog();
-    void ClearLog();
+    Task<string> GetLog();
+    Task ClearLog();
 }

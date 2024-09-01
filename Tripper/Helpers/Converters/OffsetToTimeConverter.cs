@@ -9,7 +9,7 @@ public class OffsetToTimeConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return ((DateTimeOffset)value).ToString("HH:mm:ss");
+        return ((DateTimeOffset)value).ToLocalTime().ToString("HH:mm:ss");
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
