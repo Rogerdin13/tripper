@@ -23,34 +23,44 @@
 
             <ScrollView Grid.ColumnSpan="2" Grid.Row="0">
                 <Grid>
+                    
+                    <!-- only visible when there is no 'trip tracking' -->
                     <Label 
                         Text="Tripper not running -> please check if GPS in enabled &amp; try to refresh the page."
-                        TextColor="#ff0000"
+                        TextColor="#BB0000"
                         FontAttributes="Bold"
                         FontSize="16"
                         VerticalTextAlignment="Center"
                         HorizontalTextAlignment="Center"
                         IsVisible="{Binding ListenerIsRunning, Converter={StaticResource BoolInverter}}"/>
+                    
+                    <!-- top left trip text -->
                     <Label 
                         VerticalTextAlignment="Start"
                         HorizontalTextAlignment="Start"
                         FontSize="16"
+                        Padding="0,10,0,0"
                         IsVisible="{Binding ListenerIsRunning}">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Total: "/>
+                                <Span Text="Current Trip: "/>
                                 <Span Text="{Binding TotalDistance, Converter={StaticResource DistanceConverter}}"/>
-                                <Span Text="m"/>
+                                <Span Text=" km"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
+                    
+                    <!-- top right clear button to reset current trip -->
                     <Button 
                         VerticalOptions="Start"
                         HorizontalOptions="End"
                         Text="CLEAR" 
-                        Background="#990000" 
-                        TextColor="#ffffff" 
+                        FontSize="16"
+                        Background="#AF00FF" 
+                        TextColor="#FFFFFF" 
                         Command="{Binding TotalResetCommand}"/>
+                    
+                    <!-- middle distant tracker -->
                     <Label 
                         Padding="5"
                         FontSize="16"
@@ -60,14 +70,18 @@
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="{Binding PartialDistance, Converter={StaticResource DistanceConverter}}" FontSize="88"/>
-                                <Span Text="m"/>
+                                <Span Text=" km"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
+                    
+                    <!-- compass in bottom middle -->
                     <Label 
                         VerticalTextAlignment="End"
                         HorizontalTextAlignment="Center"
                         Text="{Binding LastReading.Heading, Converter={StaticResource HeadingConverter}}"/>
+                    
+                    <!-- current speed in bottom left -->
                     <Label 
                         VerticalTextAlignment="End"
                         HorizontalTextAlignment="Start">
@@ -78,19 +92,24 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
+
+                    <!-- time of the app starting or time of the last reading -->
                     <Label 
                         Text="{Binding LastReading.Timestamp, Converter={StaticResource OffsetToTimeConverter}}"
                         VerticalOptions="End" 
                         HorizontalOptions="End"
                         IsVisible="{Binding ListenerIsRunning}"/>
+                    
                 </Grid>
             </ScrollView>
+            
+            <!-- 'RESET' button at the bottom -->
             <Button 
                 Grid.Row="1" 
                 Text="RESET" 
                 Background="#666666" 
-                TextColor="#ffffff" 
-                FontSize="28" 
+                TextColor="#FFFFFF" 
+                FontSize="36" 
                 IsEnabled="{Binding ResetInProgress, Converter={StaticResource BoolInverter}}" 
                 Command="{Binding PartialResetCommand}"/>
             

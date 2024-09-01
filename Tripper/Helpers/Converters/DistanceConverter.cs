@@ -14,7 +14,7 @@ namespace Tripper.Helpers.Converters
             if (!double.TryParse(value?.ToString(), out var rawDistance)) return "0";
             return rawDistance == 0 
                 ? "0" 
-                : ((int)Math.Floor(rawDistance)).ToString("##,#");
+                : rawDistance.ToString("##,##0.00");
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

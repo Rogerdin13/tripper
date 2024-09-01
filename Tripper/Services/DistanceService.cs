@@ -110,7 +110,7 @@ public class DistanceService : IDistanceService
         var lastPos = PositionList[1];
 
         // in meters with max 3 decimal characters
-        var distance = Math.Round(Location.CalculateDistance(lastPos.Latitude, lastPos.Longitude, newPos.Latitude, newPos.Longitude, DistanceUnits.Kilometers)*1000, 3);
+        var distance = Math.Round(Location.CalculateDistance(lastPos.Latitude, lastPos.Longitude, newPos.Latitude, newPos.Longitude, DistanceUnits.Kilometers), 2);
 
         TotalDistanceCounter += distance;
         PartialDistanceCounter += distance;
