@@ -8,4 +8,5 @@ I will not provide release files (.apk, .aab. .ipa), therefore you will need to 
 
 ## License
 Build with the help of [Prism](https://github.com/PrismLibrary/Prism) and [Shiny](https://github.com/shinyorg/shiny) (BIG SHOUTOUT!)
+<br/>
 This project is licensed under the GPL3 License - see the [LICENSE](LICENSE) file for details.
