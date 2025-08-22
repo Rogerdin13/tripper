@@ -5,6 +5,7 @@ This is NOT an STD but an Odometer-App for Android and iOS.
 
 ## How-To Use
 I will not provide release files (.apk, .aab. .ipa), therefore you will need to build this on your own with VS.
+<br/>
 This may be helpful for newer coders: [MS Deployment Guide](https://learn.microsoft.com/en-us/dotnet/maui/deployment/?view=net-maui-9.0)
 
 ## License
